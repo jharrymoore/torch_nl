@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Optional
 import torch
 
 from .utils import get_number_of_cell_repeats, get_cell_shift_idx, strides_of
@@ -120,6 +120,7 @@ def linked_cell(
     cell: torch.Tensor,
     cutoff: float,
     num_repeats: torch.Tensor,
+    dtype: Optional[torch.dtype] = None,
     self_interaction: bool = False,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Determine the atomic neighborhood of the atoms of a given structure for a particular cutoff using the linked cell algorithm.
@@ -146,7 +147,7 @@ def linked_cell(
             cell shift indices to be used in reconstructing the neighbor atom positions.
     """
     device = pos.device
-    dtype = pos.dtype
+    dtype = pos.dtype if dtype is None else dtype
     n_atom = pos.shape[0]
     # find all the integer shifts of the unit cell given the cutoff and periodicity
     shifts_idx = get_cell_shift_idx(num_repeats, dtype)
@@ -270,6 +271,7 @@ def build_linked_cell_neighborhood(
     pbc: torch.Tensor,
     cutoff: float,
     n_atoms: torch.Tensor,
+    dtype: Optional[torch.dtype] = None,
     self_interaction: bool = False,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """Build the neighborlist of a given set of atomic structures using the linked cell algorithm.
@@ -317,6 +319,7 @@ def build_linked_cell_neighborhood(
             cell[i_structure],
             cutoff,
             num_repeats[i_structure],
+            dtype,
             self_interaction,
         )
 

@@ -37,10 +37,10 @@ def build_naive_neighborhood(
     cutoff: float,
     n_atoms: torch.Tensor,
     self_interaction: bool,
+    dtype: torch.dtype
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """TODO: add doc"""
     device = positions.device
-    dtype = positions.dtype
 
     num_repeats_ = get_number_of_cell_repeats(cutoff, cell, pbc)
 

@@ -1,4 +1,5 @@
 import torch
+from typing import Optional
 
 from .naive_impl import build_naive_neighborhood
 from .geometry import compute_cell_shifts
@@ -59,12 +60,14 @@ def compute_neighborlist_n2(
     cell: torch.Tensor,
     pbc: torch.Tensor,
     batch: torch.Tensor,
+    dtype: Optional[torch.dtype] = None,
     self_interaction: bool = False,
 ):
+    dtype = pos.dtype if dtype is None else dtype
     # with torch.cuda.amp.autocast():
     n_atoms = torch.bincount(batch)
     mapping, batch_mapping, shifts_idx = build_naive_neighborhood(
-        pos, cell, pbc, cutoff, n_atoms, self_interaction
+        pos, cell, pbc, cutoff, n_atoms, self_interaction, dtype
     )
     mapping, mapping_batch, shifts_idx = strict_nl(
         cutoff, pos, cell, mapping, batch_mapping, shifts_idx
@@ -79,11 +82,12 @@ def compute_neighborlist(
     cell: torch.Tensor,
     pbc: torch.Tensor,
     batch: torch.Tensor,
+    dtype: Optional[torch.dtype] = None,
     self_interaction: bool = False,
 ):
     n_atoms = torch.bincount(batch)
     mapping, batch_mapping, shifts_idx = build_linked_cell_neighborhood(
-        pos, cell, pbc, cutoff, n_atoms, self_interaction
+        pos, cell, pbc, cutoff, n_atoms, dtype, self_interaction
     )
 
     mapping, mapping_batch, shifts_idx = strict_nl(
