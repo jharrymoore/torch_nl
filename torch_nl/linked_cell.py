@@ -77,6 +77,7 @@ def get_linear_bin_idx(
     bin_index_l = ravel_3d(bin_index_s, nbins_s)
     return bin_index_l
 
+
 def scatter_bin_index(
     nbins: int,
     max_n_atom_per_bin: int,
