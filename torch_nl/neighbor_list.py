@@ -87,7 +87,7 @@ def compute_neighborlist(
 ):
     n_atoms = torch.bincount(batch)
     mapping, batch_mapping, shifts_idx = build_linked_cell_neighborhood(
-        pos, cell, pbc, cutoff, n_atoms, self_interaction, dtype
+        pos, cell, pbc, cutoff, n_atoms, dtype, self_interaction
     )
 
     mapping, mapping_batch, shifts_idx = strict_nl(
